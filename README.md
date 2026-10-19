@@ -127,3 +127,8 @@ aplicación accede a los datos únicamente a través de las funciones exportadas
 Según lo planteado en la Etapa 1, la Etapa 3 migrará la app a **React Native**, reutilizando la misma
 lógica de negocio y sustituyendo `lib/db.js` por **Firebase** (Authentication, Firestore y Storage)
 como base de datos persistente compartida entre la web y la app móvil.
+
+
+## Etapa 3 - Aplicación móvil
+
+La versión React Native/Expo se encuentra en [mobile](mobile/README.md), con configuración Android/iOS, SQLite, diseño basado en Figma, pruebas y documentación del Foro 1. Consulta [los criterios y pendientes](mobile/docs/CRITERIOS.md) antes de la entrega.
