@@ -39,9 +39,11 @@ ui.adb('shell','pm','clear',ui.PACKAGE)
 thread=threading.Thread(target=recorder,daemon=True);thread.start()
 try:
  ui.adb('shell','input','keyevent','3');time.sleep(2)
- # La pantalla inicial del launcher muestra el recurso instalado, sin gráficos añadidos.
- event('Abrir APK instalado')
- ui.adb('shell','am','start','-n',ui.PACKAGE+'/.MainActivity');ui.wait('Rol de acceso',90)
+ size=ui.adb('shell','wm','size').decode();w,h=map(int,ui.re.search(r'(\d+)x(\d+)',size).groups())
+ ui.adb('shell','input','swipe',str(w//2),str(int(h*.92)),str(w//2),str(int(h*.18)),'500')
+ ui.wait('Comerciales Mely',30);ui.screenshot('00-icono-launcher.png');time.sleep(4)
+ event('Abrir APK instalado desde el icono Mely')
+ ui.navigate('Comerciales Mely','Rol de acceso')
  event('Login vacío: rechazo de datos obligatorios');ui.tap('Iniciar sesión');ui.wait('usuario:');ui.screenshot('13-login-vacio.png');time.sleep(4)
  event('Credenciales incorrectas: acceso rechazado');ui.fill('Usuario','admin');ui.fill('Contraseña','claveerronea');ui.tap('Iniciar sesión');ui.wait('Usuario o contraseña incorrectos.');ui.screenshot('14-login-incorrecto.png');time.sleep(4)
  # Reiniciar únicamente la actividad elimina campos transitorios; no modifica la base.
