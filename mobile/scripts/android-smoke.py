@@ -47,6 +47,15 @@ def tap(text, editable=False, contains=False):
     adb('shell','input','tap',str((x1+x2)//2),str((y1+y2)//2))
     time.sleep(.4)
 
+def navigate(control, expected):
+    for attempt in range(3):
+        tap(control)
+        try:
+            return wait(expected, 12)
+        except RuntimeError:
+            if attempt == 2: raise
+            print('Reintentando interacción:', control, flush=True)
+
 def fill(text, value):
     tap(text, editable=True)
     adb('shell','input','text',value.replace(' ','%s'))
@@ -98,7 +107,7 @@ try:
     wait('Rol de acceso',90);screenshot('01-login.png');record('Inicio autónomo del APK y pantalla de acceso')
     tap('Iniciar sesión');wait('usuario:');record('Validación de formulario vacío')
     login('admin','admin123','Admin');screenshot('02-inventario.png');record('Autenticación y catálogo con recursos de Figma')
-    tap('Ver Espejo de Tocador LED');wait('Ficha Técnica');screenshot('03-producto.png');record('Navegación a ficha técnica con fotografía')
+    navigate('Ver Espejo de Tocador LED','Ficha Técnica');screenshot('03-producto.png');record('Navegación a ficha técnica con fotografía')
     tap('Volver al inventario');tap('Movimientos',contains=True);wait('Registrar Movimiento')
     tap('Seleccionar producto');tap('Seleccionar Set de 6 vasos plásticos');wait('Stock actual en sala:')
     root=dump();stock_text=' '.join(label(n) for n in root.iter('node'))
@@ -120,7 +129,9 @@ try:
     logout();record('Cierre de sesión revocado y retorno al acceso público')
     (OUT/'ANDROID_SMOKE_OK.txt').write_text('Recorrido Android completado: '+str(len(steps))+' comprobaciones.\n',encoding='utf-8')
 except Exception as exc:
-    try:screenshot('smoke-failure.png')
+    try:
+        screenshot('smoke-failure.png')
+        (OUT/'logcat.txt').write_bytes(adb('logcat','-d','-t','2000'))
     except Exception:pass
     steps.append({'paso':'Recorrido interrumpido','resultado':'ERROR','detalle':str(exc)})
     (OUT/'android-smoke.json').write_text(json.dumps(steps,ensure_ascii=False,indent=2),encoding='utf-8')

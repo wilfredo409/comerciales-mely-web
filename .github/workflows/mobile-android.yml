@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [etapa3/avance1-movil-20261018]
-    paths: [mobile/**, .github/workflows/mobile-android.yml]
+    paths: [mobile/src/**, mobile/assets/**, mobile/package.json, mobile/package-lock.json, mobile/app.json]
 permissions:
   contents: read
 concurrency:
