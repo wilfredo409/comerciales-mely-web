@@ -51,3 +51,12 @@ yarn-error.*
 /output/pdf-qa/
 .env*
 !.env.example
+
+!/output/evidence/android-smoke.json
+!/output/evidence/ANDROID_SMOKE_OK.txt
+!/output/evidence/registro.json
+!/output/evidence/REGISTRO_OK.txt
+
+# Cachés de herramientas de verificación
+__pycache__/
+*.py[cod]

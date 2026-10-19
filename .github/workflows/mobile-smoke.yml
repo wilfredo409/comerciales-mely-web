@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [etapa3/avance1-movil-20261018]
-    paths: [.github/workflows/mobile-smoke.yml, mobile/scripts/android-smoke.py]
+    paths: [.github/workflows/mobile-smoke.yml]
 permissions:
   contents: read
   actions: read
@@ -16,7 +16,7 @@ jobs:
       - uses: actions/download-artifact@v8
         with:
           name: Comerciales-Mely-Android
-          run-id: 39195110302
+          run-id: 39197354857
           github-token: ${{ github.token }}
           path: mobile/output/android
       - name: Habilitar KVM

@@ -47,7 +47,7 @@ export default function Layout() {
         options={{ title: "Perfil", tabBarIcon: icon("cuenta") }}
       />
       {["index", "facturacion", "reportes", "producto"].map((name) => (
-        <Tabs.Screen key={name} name={name} options={{ href: null }} />
+        <Tabs.Screen key={name} name={name} options={{ tabBarButton: () => null, tabBarItemStyle: { display: "none" } }} />
       ))}
     </Tabs>
   );
