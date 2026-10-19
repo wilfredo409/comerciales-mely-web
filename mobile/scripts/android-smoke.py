@@ -44,7 +44,8 @@ def tap(text, editable=False, contains=False):
     node=find(text, editable, contains)
     values=list(map(int,re.findall(r'\d+',node.attrib['bounds'])))
     x1,y1,x2,y2=values
-    adb('shell','input','tap',str((x1+x2)//2),str((y1+y2)//2))
+    x,y=str((x1+x2)//2),str((y1+y2)//2)
+    adb('shell','input','swipe',x,y,x,y,'120')
     time.sleep(.4)
 
 def navigate(control, expected):
@@ -131,7 +132,12 @@ try:
 except Exception as exc:
     try:
         screenshot('smoke-failure.png')
-        (OUT/'logcat.txt').write_bytes(adb('logcat','-d','-t','2000'))
+        pid=adb('shell','pidof',PACKAGE).decode().strip()
+        (OUT/'logcat.txt').write_bytes(adb('logcat','-d','--pid='+pid))
+    except Exception:pass
+    try:
+        tap('Perfil',contains=True);time.sleep(2);screenshot('diagnostico-perfil.png')
+        (OUT/'diagnostico-perfil.xml').write_bytes(adb('shell','uiautomator','dump','/dev/tty'))
     except Exception:pass
     steps.append({'paso':'Recorrido interrumpido','resultado':'ERROR','detalle':str(exc)})
     (OUT/'android-smoke.json').write_text(json.dumps(steps,ensure_ascii=False,indent=2),encoding='utf-8')
