@@ -1,3 +1,4 @@
+param([string]$Architectures = 'arm64-v8a,x86_64')
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $env:ANDROID_HOME = Join-Path $env:LOCALAPPDATA 'Android\Sdk'
@@ -13,7 +14,7 @@ if (-not (Test-Path -LiteralPath (Join-Path $projectRoot 'android'))) {
 }
 Push-Location (Join-Path $projectRoot 'android')
 try {
-  & .\gradlew.bat assembleRelease '-PreactNativeArchitectures=arm64-v8a,x86_64' '--max-workers=2'
+  & .\gradlew.bat assembleRelease "-PreactNativeArchitectures=$Architectures" '--max-workers=2'
   if ($LASTEXITCODE -ne 0) { throw 'Falló la compilación Android.' }
   $outputDir = Join-Path $projectRoot 'output\android'
   New-Item -ItemType Directory -Path $outputDir -Force | Out-Null

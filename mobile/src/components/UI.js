@@ -18,6 +18,7 @@ export function Button({
   danger = false,
   disabled = false,
   testID,
+  icon,
 }) {
   return (
     <Pressable
@@ -29,11 +30,13 @@ export function Button({
       onPress={onPress}
       style={({ pressed }) => [
         s.button,
+        icon && { flexDirection: "row", gap: 8 },
         secondary && s.secondary,
         danger && { backgroundColor: colors.red },
         (disabled || pressed) && { opacity: 0.55 },
       ]}
     >
+      {icon}
       <Text style={[s.buttonText, secondary && s.secondaryText]}>{title}</Text>
     </Pressable>
   );
@@ -122,9 +125,7 @@ export function Choice({ values, value, onChange }) {
           onPress={() => onChange(id)}
           style={[s.button, s.secondary, value === id && s.selected]}
         >
-          <Text
-            style={[s.secondaryText, value === id && { color: colors.white }]}
-          >
+          <Text style={[s.secondaryText, value === id && { color: "#92400E" }]}>
             {label}
           </Text>
         </Pressable>
@@ -159,6 +160,68 @@ export function Loading() {
     >
       <ActivityIndicator size="large" color={colors.navy} />
       <Text style={s.subtitle}>Preparando Comerciales Mely…</Text>
+    </View>
+  );
+}
+
+export function Quantity({ label, value, onChange }) {
+  return (
+    <View>
+      <Text style={s.label}>{label}</Text>
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Disminuir cantidad"
+          onPress={() =>
+            onChange(String(Math.max(1, (Number(value) || 1) - 1)))
+          }
+          style={{
+            width: 48,
+            height: 48,
+            borderRadius: 24,
+            borderWidth: 1,
+            borderColor: colors.line,
+            backgroundColor: "white",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={{ fontSize: 22 }}>−</Text>
+        </Pressable>
+        <TextInput
+          accessibilityLabel={label}
+          value={value}
+          onChangeText={onChange}
+          keyboardType="number-pad"
+          style={[
+            s.input,
+            {
+              width: 80,
+              textAlign: "center",
+              borderColor: colors.primary,
+              fontSize: 18,
+              fontWeight: "700",
+            },
+          ]}
+        />
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Aumentar cantidad"
+          onPress={() => onChange(String((Number(value) || 0) + 1))}
+          style={{
+            width: 48,
+            height: 48,
+            borderRadius: 24,
+            borderWidth: 1,
+            borderColor: colors.line,
+            backgroundColor: "white",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={{ fontSize: 22 }}>+</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }

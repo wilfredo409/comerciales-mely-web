@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, Pressable } from "react-native";
+import { Image } from "expo-image";
 import { useLocalSearchParams, router } from "expo-router";
 import { useApp } from "../../context/AppContext";
 import { allowed, money } from "../../domain/business.mjs";
@@ -10,13 +11,33 @@ export default function Producto() {
   const { id } = useLocalSearchParams();
   const { user, state } = useApp();
   const p = state.productos.find((p) => p.id === id && p.activo);
+  const edit = () =>
+    router.replace({ pathname: "/inventario", params: { edit: p.id } });
   return (
-    <Screen title="Ficha Técnica">
-      <Button
-        secondary
-        title="‹ Inventario"
-        onPress={() => router.replace("/inventario")}
-      />
+    <Screen>
+      <View style={[s.row, { minHeight: 56 }]}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Volver al inventario"
+          onPress={() => router.replace("/inventario")}
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 8,
+            minHeight: 48,
+          }}
+        >
+          <Image
+            source={require("../../../assets/figma/s2-imgVector.svg")}
+            style={{ width: 16, height: 16 }}
+          />
+          <Text style={{ color: colors.primary, fontWeight: "600" }}>
+            Inventario
+          </Text>
+        </Pressable>
+        <Text style={[s.heading, { fontSize: 16 }]}>Ficha Técnica</Text>
+        <View style={{ width: 32 }} />
+      </View>
       {!p ? (
         <Empty text="Este producto no está disponible." />
       ) : (
@@ -75,19 +96,25 @@ export default function Producto() {
           </Card>
           <Text style={s.label}>Descripción del Catálogo</Text>
           <Text style={s.subtitle}>
-            {p.descripcion ||
-              `${p.nombre}. Producto de la categoría ${p.categoria}, disponible en Comerciales Mely.`}
+            {p.imagenKey === "espejo"
+              ? "Espejo con luz led incorporada, regulador de intensidad táctil, batería recargable vía USB. Ideal para maquillaje profesional y cuidado facial."
+              : `${p.nombre}. Producto de la categoría ${p.categoria}, disponible en Comerciales Mely.`}
           </Text>
           {allowed(user, "product") && (
-            <Button
-              title="Editar producto / fotografía"
-              onPress={() =>
-                router.replace({
-                  pathname: "/inventario",
-                  params: { edit: p.id },
-                })
-              }
-            />
+            <View style={{ gap: 12, marginTop: 24 }}>
+              <Button
+                secondary
+                title="Actualizar Fotografía"
+                icon={
+                  <Image
+                    source={require("../../../assets/figma/s2-imgVector1.svg")}
+                    style={{ width: 18, height: 18 }}
+                  />
+                }
+                onPress={edit}
+              />
+              <Button title="Editar Producto" onPress={edit} />
+            </View>
           )}
         </>
       )}

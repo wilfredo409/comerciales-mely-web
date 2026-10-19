@@ -9,10 +9,12 @@ import {
   Field,
   Button,
   Choice,
+  Quantity,
   ErrorText,
   Empty,
   useTask,
 } from "../../components/UI";
+import { Image } from "expo-image";
 import { styles as s } from "../../theme/theme";
 export default function Movimientos() {
   const { user, state, mutate } = useApp();
@@ -31,15 +33,28 @@ export default function Movimientos() {
     >
       {allowed(user, "movement") && (
         <View style={{ gap: 20 }}>
-          <Button
-            secondary
-            title={
-              product
-                ? `${product.nombre} · ${product.stock} disponibles`
-                : "Seleccionar producto"
-            }
-            onPress={() => setPicker(true)}
-          />
+          <View>
+            <Text style={s.label}>Producto</Text>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Seleccionar producto"
+              onPress={() => setPicker(true)}
+              style={[s.input, s.row]}
+            >
+              <Text numberOfLines={1} style={{ flex: 1 }}>
+                {product ? product.nombre : "Seleccionar producto"}
+              </Text>
+              <Image
+                source={require("../../../assets/figma/s3-imgVector.svg")}
+                style={{ width: 14, height: 14 }}
+              />
+            </Pressable>
+            {product && (
+              <Text style={{ color: "#92400E", fontSize: 12, marginTop: 6 }}>
+                Stock actual en sala: {product.stock} unidades
+              </Text>
+            )}
+          </View>
           <Choice
             values={[
               ["entrada", "Entrada (Ingreso)"],
@@ -48,14 +63,15 @@ export default function Movimientos() {
             value={tipo}
             onChange={setTipo}
           />
-          <Field
+          <Quantity
             label="Cantidad de Unidades"
             value={cantidad}
-            onChangeText={setCantidad}
-            keyboardType="number-pad"
+            onChange={setCantidad}
           />
           <Field
             label="Notas / Justificación"
+            multiline
+            style={[s.input, { height: 80, textAlignVertical: "top" }]}
             value={nota}
             onChangeText={setNota}
             autoCapitalize="sentences"
