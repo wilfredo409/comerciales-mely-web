@@ -68,6 +68,15 @@ def wait(text, seconds=35):
     while time.monotonic()<deadline:
         try:
             root=dump()
+            labels=[label(n) for n in root.iter('node')]
+            if any("Pixel Launcher isn't responding" in v for v in labels):
+                close=next((n for n in root.iter('node') if label(n).casefold()=='close app'),None)
+                if close is not None:
+                    x1,y1,x2,y2=map(int,re.findall(r'\d+',close.attrib['bounds']))
+                    adb('shell','input','tap',str((x1+x2)//2),str((y1+y2)//2))
+                    print('Cerrado el diálogo ANR de Pixel Launcher (sistema del emulador).',flush=True)
+                    time.sleep(1)
+                    continue
             if any(text.casefold() in label(n).casefold() for n in root.iter('node')): return root
         except (RuntimeError,ET.ParseError): pass
         time.sleep(.8)
