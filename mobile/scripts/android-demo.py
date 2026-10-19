@@ -43,7 +43,7 @@ try:
  ui.adb('shell','input','swipe',str(w//2),str(int(h*.92)),str(w//2),str(int(h*.18)),'500')
  ui.wait('Comerciales Mely',30);ui.screenshot('00-icono-launcher.png');time.sleep(4)
  event('Abrir APK instalado desde el icono Mely')
- ui.navigate('Comerciales Mely','Rol de acceso')
+ ui.tap('Comerciales Mely',contains=True);ui.wait('Rol de acceso',90)
  event('Login vacío: rechazo de datos obligatorios');ui.tap('Iniciar sesión');ui.wait('usuario:');ui.screenshot('13-login-vacio.png');time.sleep(4)
  event('Credenciales incorrectas: acceso rechazado');ui.fill('Usuario','admin');ui.fill('Contraseña','claveerronea');ui.tap('Iniciar sesión');ui.wait('Usuario o contraseña incorrectos.');ui.screenshot('14-login-incorrecto.png');time.sleep(4)
  # Reiniciar únicamente la actividad elimina campos transitorios; no modifica la base.
