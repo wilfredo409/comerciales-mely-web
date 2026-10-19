@@ -1,5 +1,8 @@
 name: Comerciales Mely - Video real sin audio
 on:
+  push:
+    branches: [etapa3/avance1-movil-20261018]
+    paths: [.github/workflows/mobile-demo.yml]
   workflow_dispatch:
     inputs:
       build_run_id:
@@ -17,7 +20,8 @@ jobs:
       - name: Descargar APK compilado
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh run download '${{ inputs.build_run_id }}' -n Comerciales-Mely-Android -D mobile/output/android
+          BUILD_RUN_ID: ${{ inputs.build_run_id || '39256275087' }}
+        run: gh run download "$BUILD_RUN_ID" -n Comerciales-Mely-Android -D mobile/output/android
       - name: Habilitar KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
