@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [etapa3/avance1-movil-20261018]
-    paths: [.github/workflows/mobile-smoke.yml, mobile/scripts/android-smoke.py]
+    paths: [.github/workflows/mobile-smoke.yml]
 permissions:
   contents: read
   actions: read
